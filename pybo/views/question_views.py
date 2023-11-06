@@ -21,20 +21,6 @@ def question_create(request):
             data = f"{question.subject}||{question.content}"
             sha256_hash.update(data.encode('utf-8'))
             question.question_hash = sha256_hash.hexdigest()
-
-            hash_value = question.question_hash
-            qr = qrcode.QRCode(
-                version=1,
-                error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10,
-                border=4,
-            )
-            qr.add_data(hash_value)
-            qr.make(fit=True)
-            img = qr.make_image(fill_color="black", back_color="white")
-            img.save(f"../static/qrcodes/{question.question_id}")
-
-            question.save()
             return redirect('pybo:index')
     else:
         form = QuestionForm()

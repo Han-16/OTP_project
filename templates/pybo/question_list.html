@@ -107,7 +107,8 @@
     <!-- 페이징처리 끝 -->
 <!--    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">결재 문서 등록</a>-->
     {% if user.is_authenticated %}
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="@mdo">결재 문서 등록</button>
+    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">결재 문서 등록</a>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="@mdo">Modal 테스트</button>
 
     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
