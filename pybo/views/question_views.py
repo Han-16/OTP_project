@@ -21,6 +21,7 @@ def question_create(request):
             data = f"{question.subject}||{question.content}"
             sha256_hash.update(data.encode('utf-8'))
             question.question_hash = sha256_hash.hexdigest()
+            question.save()
             return redirect('pybo:index')
     else:
         form = QuestionForm()
