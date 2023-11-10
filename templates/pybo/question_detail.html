@@ -42,7 +42,9 @@
                     </div>
                 </div>
 
-                    {% if request.user.last_name > question.author.last_name or request.user.is_staff and question.author.is_staff == False%}
+                    {% if request.user.last_name > question.author.last_name or request.user.is_staff %}
+                    {% if question.author.is_staff %}
+                    {% else %}
                     <div>
                     <a href="javascript:void(0)" class="approved btn btn-primary"
                     data-uri="{% url 'pybo:question_decision' question.id %}?status=approved">Approve</a>
