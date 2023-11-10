@@ -5,7 +5,6 @@ from django.db.models import Q, Count
 from django.shortcuts import render, get_object_or_404
 
 from ..models import Question, Comment
-import qrcode
 
 logger = logging.getLogger('pybo')
 

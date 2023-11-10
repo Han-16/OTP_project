@@ -6,7 +6,6 @@ from django.utils import timezone
 import hashlib
 from ..forms import QuestionForm
 from ..models import Question
-import qrcode
 
 
 @login_required(login_url='common:login')
@@ -74,8 +73,11 @@ def question_decision(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
     if request.user.last_name <= question.author.last_name:
-        messages.error(request, "권한이 없습니다.")
-        return redirect('pybo:index')
+        if request.user.is_staff:
+            pass
+        else:
+            messages.error(request, "결재할 수 있는 권한이 없습니다.")
+            return redirect('pybo:index')
 
     status = request.GET.get('status')
 
