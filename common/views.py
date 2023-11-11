@@ -22,7 +22,7 @@ def signup(request):
             if position in pos:
                 user.last_name = pos[position]
             else:
-                user.last_name = pos["외부인"]
+                user.last_name = pos["등록되지않음"]
 
             # 공개 키 생성 및 설정
             symmetric_key = generate_symmetric_key()
