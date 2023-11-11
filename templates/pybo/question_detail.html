@@ -59,6 +59,7 @@
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#questionModal" data-whatever="@Reject">Reject Modal</button>
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#questionModal" data-whatever="@Hold">Hold Modal</button>
 
+
                     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -69,16 +70,15 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form>
+                            <form action="{% url 'pybo:question_otp' question.id %}" method="post">
+                              {% csrf_token %}
                               <div class="form-group">
-                                <label for="totp" class="col-form-label">남은 시간 : {{ user.first_name }}</label>
-                                <input type="text" class="form-control" id="totp", placeholder="TOTP를 입력하세요.">
+                                <label for="totp" class="col-form-label">TOTP</label>
+                                <input type="text" class="form-control" id="totp" name="totp" placeholder="TOTP를 입력하세요.">
                               </div>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Determine</button>
                             </form>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Send</button>
                           </div>
                         </div>
                       </div>

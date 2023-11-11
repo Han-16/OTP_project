@@ -15,6 +15,7 @@ urlpatterns = [
     path('question/delete/<int:question_id>/', question_views.question_delete, name='question_delete'),
     path('question/decision/<int:question_id>/', question_views.question_decision, name='question_decision'),
     path('question/question_detail/<int:question_id>/', question_views.question_detail, name='question_detail'),
+    path('question/approval/<int:question_id>/', question_views.question_otp, name='question_otp'),
 
     # answer_views.py
     path('answer/create/<int:question_id>/', answer_views.answer_create, name='answer_create'),

@@ -6,7 +6,8 @@ from django.utils import timezone
 import hashlib
 from ..forms import QuestionForm
 from ..models import Question
-
+# from ...totp import generate_totp, verify_totp
+import pyotp
 
 @login_required(login_url='common:login')
 def question_create(request):
@@ -93,3 +94,13 @@ def question_decision(request, question_id):
 def question_detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return redirect('pybo:detail', question_id=question.id)
+
+def question_otp(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    key = request.user.first_name
+    srv_totp = pyotp.TOTP(key)
+    cli_totp = request.POST.get('totp')
+    if srv_totp.verify(cli_totp):
+        print("인증 성공! 결재 구현하세요")
+        return redirect('pybo:index')
+    print("구현 실패")
