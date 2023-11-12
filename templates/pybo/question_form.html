@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
-
 {% block content %}
+
 <div class="container">
     <h5 class="my-3 border-bottom pb-2">결재 등록</h5>
     <form method="post" class="post-form my-3">
         {% csrf_token %}
         <!-- 오류표시 Start -->
+        {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% if form.errors %}
             <div class="alert alert-danger" role="alert">
             {% for field in form %}
@@ -29,7 +37,41 @@
                       id="content" rows="10">{{ form.content.value|default_if_none:'' }}</textarea>
         </div>
         <br>
-        <button type="submit" class="btn btn-primary">등록하기</button>
+<!--        <button type="submit" class="btn btn-primary">등록하기</button>-->
+
+<!--        -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="holding">등록하기</button>
+        <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="questionModalLabel">결재 문서 등록</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                 <form>
+                  {% csrf_token %}
+                  <input type="hidden" id="modalButtonClicked" name="modalButtonClicked" value="">
+                  <div class="form-group">
+                    <label for="cli_hamc" class="col-form-label">HMAC</label>
+                    <input type="text" class="form-control" id="cli_hamc" name="cli_hamc" placeholder="HMAC-SHA256(key, subject||content)">
+                  </div>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">등록하기</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
     </form>
 </div>
+
+<script>
+    var errorInfo = {{ error_info|default:"{}"|safe }};
+    if (errorInfo && errorInfo.error) {
+        alert(decodeURIComponent(JSON.parse('"' + errorInfo.error + '"')));
+    }
+</script>
 {% endblock %}

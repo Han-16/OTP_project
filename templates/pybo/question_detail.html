@@ -46,18 +46,10 @@
                     {% if question.author.is_staff %}
                     {% else %}
                     <div>
-                    <a href="javascript:void(0)" class="approved btn btn-primary"
-                    data-uri="{% url 'pybo:question_decision' question.id %}?status=approved">Approve</a>
 
-                    <a href="javascript:void(0)" class="rejected btn btn-danger"
-                    data-uri="{% url 'pybo:question_decision' question.id %}?status=rejected">Reject</a>
-
-                    <a href="javascript:void(0)" class="rejected btn btn-secondary"
-                    data-uri="{% url 'pybo:question_decision' question.id %}?status=holding">Hold</a>
-
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="@Approve">Approve Modal</button>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#questionModal" data-whatever="@Reject">Reject Modal</button>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#questionModal" data-whatever="@Hold">Hold Modal</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="approved">Approve Modal</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#questionModal" data-whatever="rejected">Reject Modal</button>
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#questionModal" data-whatever="holding">Hold Modal</button>
 
 
                     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
@@ -70,14 +62,15 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <form action="{% url 'pybo:question_otp' question.id %}" method="post">
+                             <form action="{% url 'pybo:question_otp' question.id %}" method="post" id="modalForm">
                               {% csrf_token %}
+                              <input type="hidden" id="modalButtonClicked" name="modalButtonClicked" value="">
                               <div class="form-group">
                                 <label for="totp" class="col-form-label">TOTP</label>
                                 <input type="text" class="form-control" id="totp" name="totp" placeholder="TOTP를 입력하세요.">
                               </div>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Determine</button>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-primary" id="determineBtn">Determine</button>
                             </form>
                           </div>
                         </div>
@@ -86,6 +79,8 @@
                     {% endif %}
                     {% endif %}
             </div>
+
+
 
             <!--질문 댓글 페이지-->
             {% if comment_list %}
@@ -310,6 +305,19 @@ $(document).ready(function(){
         $("#searchForm").submit();
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    var modalButtons = document.querySelectorAll('[data-toggle="modal"]');
+
+    modalButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var modalButtonValue = button.getAttribute("data-whatever");
+        document.getElementById("modalButtonClicked").value = modalButtonValue;
+      });
+    });
+});
+
+
 
 
 </script>
