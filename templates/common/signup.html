@@ -14,27 +14,27 @@
         {% include "form_errors.html" %}
         <div class="form-group">
             <label for="username">ID</label>
-            <input type="text" class="form-control" name="username" id="username"
+            <input type="text" class="form-control" name="username" id="username" placeholder="ID를 입력하세요"
                    value="{{ form.username.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="password1">비밀번호</label>
-            <input type="password" class="form-control" name="password1" id="password1"
+            <input type="password" class="form-control" name="password1" id="password1" placeholder="8자 이상을 입력하세요"
                    value="{{ form.password1.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="password2">비밀번호 확인</label>
-            <input type="password" class="form-control" name="password2" id="password2"
+            <input type="password" class="form-control" name="password2" id="password2" placeholder="8자 이상을 입력하세요"
                    value="{{ form.password2.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="email">이메일</label>
-            <input type="text" class="form-control" name="email" id="email"
+            <input type="text" class="form-control" name="email" id="email" placeholder="email을 입력하세요"
                    value="{{ form.email.value|default_if_none:'' }}">
         </div>
         <div class="form-group">
             <label for="position">직급</label>
-            <input type="text" class="form-control" name="position" id="position"
+            <input type="text" class="form-control" name="position" id="position" placeholder="사원 / 대리 / 과장 / 차장 / 부장"
                    value="{{ form.position.value|default_if_none:'' }}">
         </div>
         <br>

@@ -24,7 +24,6 @@ def question_create(request):
         print(f"srv_hmac: {srv_hmac}")
 
         if srv_hmac == cli_hamc:
-            print("일치!")
             if form.is_valid():
                 question = form.save(commit=False)
                 question.author = request.user  # 추가한 속성 author 적용
