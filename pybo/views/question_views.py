@@ -113,10 +113,12 @@ def question_otp(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     key = request.user.first_name
     srv_totp = pyotp.TOTP(key)
-    cli_totp = request.POST.get('totp')
+    qc = request.POST.get('qc')
     status = request.POST.get('modalButtonClicked')
+    print(f"QC : {qc}")
     print(f"decision is : {status}")
-    if srv_totp.verify(cli_totp):
+
+    if srv_totp.verify(qc):
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:
                 pass
