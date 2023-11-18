@@ -9,7 +9,7 @@ def generate_symmetric_key(key_length=16):
     key = secrets.token_hex(key_length)
     return key
 
-pos = {"외부인" : 0, "사원" : 1, "대리" : 2, "과장" : 3, "차장": 4, "부장": 5}
+pos = {"외부인" : 0, "사원" : 1, "대리" : 2, "과장" : 3, "차장": 4, "부장": 5, "짱" : 10000}
 
 
 def signup(request):

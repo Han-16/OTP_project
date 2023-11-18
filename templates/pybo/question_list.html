@@ -55,7 +55,12 @@
                 {% endif %}
             </td>
             <td>{{ question.author.username }}</td>  <!-- 글쓴이 추가 -->
-            <td>{{ question.create_date|date:"Y-m-d h:i" }}</td>
+            {% if question.modify_count > 0 %}
+                <td>{{ question.modify_date|date:"Y-m-d h:i" }}</td>
+            {% else %}
+                <td>{{ question.create_date|date:"Y-m-d h:i" }}</td>
+            {% endif %}
+
         </tr>
         {% endfor %}
         {% else %}

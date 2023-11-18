@@ -7,9 +7,10 @@ import hashlib
 from ..forms import QuestionForm
 from ..models import Question
 import hmac
-import pyotp
+from ..ocra import OCRA
 import random
 from django.http import JsonResponse
+from datetime import datetime
 
 
 @login_required(login_url='common:login')
@@ -19,19 +20,22 @@ def question_create(request):
         key = request.user.first_name.split()[0]
         subject = request.POST.get("subject")
         content = request.POST.get("content")
-        cli_hamc = request.POST.get('cli_hamc')
+        cli_hmac = request.POST.get('cli_hmac')
         srv_hmac = hmac.new(bytes(key, 'utf-8'), f"{subject}{content}".encode('utf-8'), hashlib.sha256).hexdigest()
-        print(f"cli_hamc: {cli_hamc}")
+        print(f"subject: {subject}")
+        print(f"content: {content}")
+        print(f"cli_hmac: {cli_hmac}")
         print(f"srv_hmac: {srv_hmac}")
 
-        if srv_hmac == cli_hamc:
+        if srv_hmac == cli_hmac:
             if form.is_valid():
                 question = form.save(commit=False)
                 question.author = request.user  # 추가한 속성 author 적용
-                question.create_date = timezone.now()
-                question.create_date = question.create_date
+                question.create_date = datetime.now()
+                date = question.create_date.strftime('%Y-%m-%d %I:%M')
+                print(f"date : {date}")
                 sha256_hash = hashlib.sha256()
-                data = f"{question.subject}||{question.content}"
+                data = f"{question.subject}{question.content}{question.author}{date}"
                 sha256_hash.update(data.encode('utf-8'))
                 question.question_hash = sha256_hash.hexdigest()
                 question.save()
@@ -59,13 +63,13 @@ def question_modify(request, question_id):
             question.author = request.user
 
             question.modify_date = timezone.now()  # 수정일시 저장
+            date = question.modify_date.strftime('%Y-%m-%d %I:%M')
             question.modify_count += 1
             sha256_hash = hashlib.sha256()
-            data = f"{question.subject}||{question.content}||{question.author}||{question.create_date}||{question.modify_date}"
+
+            data = f"{question.subject}{question.content}{question.author}{date}"
             sha256_hash.update(data.encode('utf-8'))
             question.question_hash = sha256_hash.hexdigest()
-
-
             question.save()
             return redirect('pybo:detail', question_id=question.id)
     else:
@@ -82,7 +86,6 @@ def question_delete(request, question_id):
         return redirect('pybo:detail', question_id=question.id)
     question.delete()
     return redirect('pybo:index')
-
 
 
 
@@ -116,19 +119,24 @@ def question_ocra(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     key = request.user.first_name.split()[0]
 
-    ocra = request.POST.get('ocra')
+    cli_ocra = request.POST.get('ocra')
     status = request.POST.get('modalButtonClicked')
     pw = request.user.first_name.split()[1]
-    date = question.create_date.strftime('%Y-%m-%d %I:%M')
-    qs = request.POST.get("challengeValue")
+    t = datetime.now().strftime("%Y-%m-%d %H:%M")
+    C = request.POST.get("challengeValue")
+    p_h = hashlib.sha1(bytes(pw, 'utf-8')).digest()
+    m = question.question_hash
+    S_check = bytes(f'{C}{p_h}{m}{t}',encoding='utf8')
+    srv_ocra = str(OCRA(key, S_check))
+    print(f"date : {t}")
+    print(f"S_check : {S_check}")
+    print(f"cli_ocra : {cli_ocra}")
+    print(f"srv_ocra : {srv_ocra}")
+    print(f"status : {status}")
 
-    print(f"pw : {pw}")
-    print(f"challenge : {qs}")
-    print(f"ocra : {ocra}")
-    print(f"decision is : {status}")
-    print(f"date : {date}")
 
-    if ocra == "test":
+    if srv_ocra == cli_ocra:
+        print("성공!")
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:
                 pass

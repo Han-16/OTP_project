@@ -55,8 +55,8 @@
                   {% csrf_token %}
                   <input type="hidden" id="modalButtonClicked" name="modalButtonClicked" value="">
                   <div class="form-group">
-                    <label for="cli_hamc" class="col-form-label">HMAC</label>
-                    <input type="text" class="form-control" id="cli_hamc" name="cli_hamc" placeholder="HMAC-SHA256(key, subject||content)">
+                    <label for="cli_hmac" class="col-form-label">HMAC</label>
+                    <input type="text" class="form-control" id="cli_hmac" name="cli_hmac" placeholder="HMAC-SHA256(key, subject||content)">
                   </div>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <button type="submit" class="btn btn-primary">등록하기</button>
