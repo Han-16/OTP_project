@@ -26,7 +26,11 @@ def signup(request):
 
             # 공개 키 생성 및 설정
             symmetric_key = generate_symmetric_key()
-            user.first_name = symmetric_key
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+
+            # user.first_name = symmetric_key
+            user.first_name = f"{symmetric_key} {raw_password}"
             subject = "대칭키 공유"  # 타이틀
             to = [user.email]  # 수신할 이메일 주소
             from_email = "qudrb24@naver.com"  # 발신할 이메일 주소
@@ -39,10 +43,9 @@ def signup(request):
             email.to = to
             email.send()
 
-            user.save()
 
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
+
+            user.save()
             user = authenticate(username = username, password = raw_password)
             login(request, user)
             return redirect('index')

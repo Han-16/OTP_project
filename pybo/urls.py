@@ -15,7 +15,10 @@ urlpatterns = [
     path('question/delete/<int:question_id>/', question_views.question_delete, name='question_delete'),
     path('question/decision/<int:question_id>/', question_views.question_decision, name='question_decision'),
     path('question/question_detail/<int:question_id>/', question_views.question_detail, name='question_detail'),
-    path('question/approval/<int:question_id>/', question_views.question_otp, name='question_otp'),
+    path('question/approval/<int:question_id>/', question_views.question_ocra, name='question_ocra'),
+    path('open_question_modal/<int:question_id>/',question_views.open_question_modal, name='open_question_modal'),
+    path('determine_qc/', question_views.determine_qc, name='determine_qc'),
+    path('open_question_modal/', question_views.open_question_modal, name='open_question_modal'),
 
     # answer_views.py
     path('answer/create/<int:question_id>/', answer_views.answer_create, name='answer_create'),

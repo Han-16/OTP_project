@@ -22,7 +22,7 @@
             <div class="d-flex justify-content-end">
                 <div class="badge bg-light text-dark p-2 text-start">
                     <div class="mb-2">작성자 : {{ question.author.username }}</div>
-                    <div>{{ question.create_date }}</div>
+                    <div>{{ question.create_date|date:"Y-m-d h:i" }}</div>
                 </div>
 
             </div>
@@ -47,9 +47,9 @@
                     {% else %}
                     <div>
 
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="approved">Approve Modal</button>
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#questionModal" data-whatever="rejected">Reject Modal</button>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#questionModal" data-whatever="holding">Hold Modal</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#questionModal" data-whatever="approved" id="approvedBtn">Approve Modal</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#questionModal" data-whatever="rejected" id="rejectedBtn">Reject Modal</button>
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#questionModal" data-whatever="holding" id="holdingBtn">Hold Modal</button>
 
 
                     <div class="modal fade" id="questionModal" tabindex="-1" role="dialog" aria-labelledby="questionModalLabel" aria-hidden="true">
@@ -62,32 +62,25 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                             <form action="{% url 'pybo:question_otp' question.id %}" method="post" id="modalForm">
+                              <form action="{% url 'pybo:question_ocra' question.id %}" method="post" id="modalForm">
                               {% csrf_token %}
                               <input type="hidden" id="modalButtonClicked" name="modalButtonClicked" value="">
+                              <input type="hidden" id="challengeValue" name="challengeValue" value="{{ challenge_value }}">
+                              <label for="challengeValueLabel" class="col-form-label">Challenge Value: <span id="challengeValueLabel">{{ challenge_value }}</span></label>
+
                               <div class="form-group">
-                                <label for="qc" class="col-form-label">TOTP</label>
-                                <input type="text" class="form-control" id="qc" name="qc" placeholder="QC">
+                                <label for="ocra" class="col-form-label">OCRA</label>
+                                <input type="text" class="form-control" id="ocra" name="ocra" placeholder="OCRA값을 입력하세요.">
                               </div>
-                             <div class="form-group">
-                                <label for="qc" class="col-form-label">TOTP</label>
-                                <input type="text" class="form-control" id="qc" name="qc" placeholder="QS">
-                              </div>
-                             <div class="form-group">
-                                <label for="qc" class="col-form-label">TOTP</label>
-                                <input type="text" class="form-control" id="qc" name="qc" placeholder="OCRA_S">
-                              </div>
-                             <div class="form-group">
-                                <label for="qc" class="col-form-label">TOTP</label>
-                                <input type="text" class="form-control" id="qc" name="qc" placeholder="OCRA_C">
-                              </div>
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-secondary" id="closeBtn" data-dismiss="modal">Close</button>
                               <button type="submit" class="btn btn-primary" id="determineBtn">Determine</button>
                             </form>
                           </div>
                         </div>
                       </div>
                     </div>
+
+
                     {% endif %}
                     {% endif %}
             </div>
@@ -279,29 +272,6 @@ $(document).ready(function(){
         }
     });
 
-    $(".recommend").on('click', function() {
-        if(confirm("추천~?~?")) {
-            location.href = $(this).data('uri');
-        }
-    });
-
-    $(".approved").on('click', function() {
-        if (confirm("허가하시겠습니까?")) {
-            location.href = $(this).data('uri');
-        }
-    });
-
-    $(".rejected").on('click', function() {
-        if (confirm("반려하시겠습니까?")) {
-            location.href = $(this).data('uri');
-        }
-    });
-
-    $(".holding").on('click', function() {
-        if (confirm("보류하시겠습니까?")) {
-            location.href = $(this).data('uri');
-        }
-    });
 });
 
 
@@ -329,6 +299,32 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+$(document).ready(function () {
+        // 각 버튼에 대한 클릭 이벤트 핸들러 정의
+        $('#approvedBtn, #rejectedBtn, #holdingBtn').click(function () {
+            // 해당 버튼의 data-whatever 속성 값 가져오기
+            var whateverValue = $(this).data('whatever');
+
+            // 모달을 열 때 서버에서 랜덤한 챌린지 값 가져오기
+            $.ajax({
+                type: 'GET',
+                url: '{% url 'pybo:open_question_modal' %}',
+                dataType: 'json',
+                success: function (data) {
+                    // 모달 열기
+                    $('#questionModalLabel').text('결재 문서 등록');
+                    $('#modalForm').attr('action', "{% url 'pybo:question_ocra' question.id %}");
+                    $('#challengeValue').val(data.challenge_value);
+                    $('#questionModal').modal('show');
+                },
+                error: function (xhr, errmsg, err) {
+                    // 에러 시 동작
+                    console.log(errmsg);
+                }
+            });
+        });
+    });
 
 
 
