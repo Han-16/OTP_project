@@ -65,7 +65,8 @@
                               <form action="{% url 'pybo:question_ocra' question.id %}" method="post" id="modalForm">
                               {% csrf_token %}
                               <input type="hidden" id="modalButtonClicked" name="modalButtonClicked" value="">
-                              <input type="hidden" id="challengeValue" name="challengeValue" value="{{ challenge_value }}">
+                              <input type="hidden" id="challengeValue" name="challengeValue" value="">
+
                               <label for="challengeValueLabel" class="col-form-label">Challenge Value: <span id="challengeValueLabel">{{ challenge_value }}</span></label>
 
                               <div class="form-group">
@@ -164,7 +165,6 @@
         </ul>
             {% endif %}
     <!-- 페이징처리 끝 -->
-<!--        <a href="{% url 'pybo:comment_create_question' question.id %}" class="small"><small>댓글 추가 !</small></a>-->
 <form id="searchForm" method="get" action="{% url 'pybo:detail' question.id %}">
     <input type="hidden" id="page" name="page" value="{{ page }}">
     <input type="hidden" id="so" name="so" value="{{ so }}">
@@ -312,12 +312,17 @@ $(document).ready(function () {
                 url: '{% url 'pybo:open_question_modal' %}',
                 dataType: 'json',
                 success: function (data) {
-                    // 모달 열기
+                    console.log("challenge value");
+                    console.log(data.challenge_value);
                     $('#questionModalLabel').text('결재 문서 등록');
                     $('#modalForm').attr('action', "{% url 'pybo:question_ocra' question.id %}");
-                    $('#challengeValue').val(data.challenge_value);
+                    $('#questionModal').on('shown.bs.modal', function () {
+                        $('#challengeValue').val(data.challenge_value);
+                        $('#challengeValueLabel').text(data.challenge_value);
+                    });
                     $('#questionModal').modal('show');
                 },
+
                 error: function (xhr, errmsg, err) {
                     // 에러 시 동작
                     console.log(errmsg);

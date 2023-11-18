@@ -120,7 +120,10 @@ def question_ocra(request, question_id):
     status = request.POST.get('modalButtonClicked')
     pw = request.user.first_name.split()[1]
     date = question.create_date.strftime('%Y-%m-%d %I:%M')
+    qs = request.POST.get("challengeValue")
+
     print(f"pw : {pw}")
+    print(f"challenge : {qs}")
     print(f"ocra : {ocra}")
     print(f"decision is : {status}")
     print(f"date : {date}")
@@ -159,7 +162,6 @@ def open_question_modal(request):
     print("open_question_modal run!")
     print(f"request.method : {request.method}")
     if request.method == 'GET':
-        # 랜덤한 챌린지 값 생성
-        challenge_value = random.randint(1000, 9999)
+        challenge_value = random.randint(1, 9999)
         print(f"challenge_value : {challenge_value}")
         return JsonResponse({'challenge_value': challenge_value})
