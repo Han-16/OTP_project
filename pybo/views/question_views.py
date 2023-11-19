@@ -122,6 +122,9 @@ def question_ocra(request, question_id):
     m = question.question_hash
     S_check = bytes(f'{C}{p_h}{m}{t}',encoding='utf8')
     srv_ocra = str(OCRA(key, S_check))
+    print(f"t is : {t}")
+    print(f"srv_orca : {srv_ocra}")
+    print(f"cli_ocra : {cli_ocra}")
 
     if srv_ocra == cli_ocra:
         print("같음")
