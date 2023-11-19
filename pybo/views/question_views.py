@@ -127,6 +127,7 @@ def question_ocra(request, question_id):
     print(f"cli_ocra : {cli_ocra}")
     print(f"C : {C}, type : {type(C)}")
     print(f"p_h is : {p_h}")
+    print(f"S_check : {S_check}")
     print(f"m is : {m}")
 
     if srv_ocra == cli_ocra:
