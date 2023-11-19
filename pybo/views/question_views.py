@@ -28,7 +28,7 @@ def question_create(request):
                 question = form.save(commit=False)
                 question.author = request.user  # 추가한 속성 author 적용
                 question.create_date = datetime.now()
-                date = question.create_date.strftime('%Y-%m-%d %I:%M')
+                date = question.create_date.strftime('%Y-%m-%d')
                 sha256_hash = hashlib.sha256()
                 data = f"{question.subject}{question.content}{question.author}{date}"
                 sha256_hash.update(data.encode('utf-8'))
@@ -58,7 +58,7 @@ def question_modify(request, question_id):
             question.author = request.user
 
             question.modify_date = timezone.now()  # 수정일시 저장
-            date = question.modify_date.strftime('%Y-%m-%d %I:%M')
+            date = question.create_date.strftime('%Y-%m-%d')
             question.modify_count += 1
             sha256_hash = hashlib.sha256()
 
@@ -116,13 +116,13 @@ def question_ocra(request, question_id):
     cli_ocra = request.POST.get('ocra')
     status = request.POST.get('modalButtonClicked')
     pw = request.user.first_name.split()[1]
-    t = datetime.now().strftime("%Y-%m-%d %H:%M")
+    t = datetime.now().strftime("%Y-%m-%d")
     C = request.POST.get("challengeValue")
     p_h = hashlib.sha1(bytes(pw, 'utf-8')).digest()
     m = question.question_hash
     S_check = bytes(f'{C}{p_h}{m}{t}',encoding='utf8')
     srv_ocra = str(OCRA(key, S_check))
-
+    print(f"t is : {t}")
     if srv_ocra == cli_ocra:
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:

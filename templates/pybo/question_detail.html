@@ -23,9 +23,9 @@
                 <div class="badge bg-light text-dark p-2 text-start">
                     <div class="mb-2">작성자 : {{ question.author.username }}</div>
                     {% if question.modify_count > 0 %}
-                        <div>{{ question.modify_date|date:"Y-m-d h:i" }}</div>
+                        <div>{{ question.modify_date|date:"Y-m-d" }}</div>
                     {% else %}
-                        <div>{{ question.create_date|date:"Y-m-d h:i" }}</div>
+                        <div>{{ question.create_date|date:"Y-m-d" }}</div>
                     {% endif %}
                 </div>
 
