@@ -125,7 +125,7 @@ def question_ocra(request, question_id):
     print(f"t is : {t}")
     print(f"srv_orca : {srv_ocra}")
     print(f"cli_ocra : {cli_ocra}")
-    print(f"C : {C}")
+    print(f"C : {C}, type : {type(C)}")
     print(f"p_h is : {p_h}")
     print(f"m is : {m}")
 
