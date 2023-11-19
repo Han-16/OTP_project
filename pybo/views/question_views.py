@@ -124,6 +124,7 @@ def question_ocra(request, question_id):
     srv_ocra = str(OCRA(key, S_check))
 
     if srv_ocra == cli_ocra:
+        print("같음")
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:
                 pass
@@ -134,7 +135,7 @@ def question_ocra(request, question_id):
         question.status = status
         question.save()
         return redirect("pybo:index")
-
+    print("안같음")
     messages.error(request, "결재할 수 있는 권한이 없습니다.")
     return redirect('pybo:index')
 
