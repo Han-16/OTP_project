@@ -122,16 +122,8 @@ def question_ocra(request, question_id):
     m = question.question_hash
     S_check = bytes(f'{C}{p_h}{m}{t}',encoding='utf8')
     srv_ocra = str(OCRA(key, S_check))
-    print(f"t is : {t}")
-    print(f"srv_orca : {srv_ocra}")
-    print(f"cli_ocra : {cli_ocra}")
-    print(f"C : {C}, type : {type(C)}")
-    print(f"p_h is : {p_h}")
-    print(f"S_check : {S_check}")
-    print(f"m is : {m}")
 
     if srv_ocra == cli_ocra:
-        print("같음")
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:
                 pass
@@ -142,7 +134,6 @@ def question_ocra(request, question_id):
         question.status = status
         question.save()
         return redirect("pybo:index")
-    print("안같음")
     messages.error(request, "결재할 수 있는 권한이 없습니다.")
     return redirect('pybo:index')
 
