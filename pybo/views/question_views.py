@@ -22,10 +22,6 @@ def question_create(request):
         content = request.POST.get("content")
         cli_hmac = request.POST.get('cli_hmac')
         srv_hmac = hmac.new(bytes(key, 'utf-8'), f"{subject}{content}".encode('utf-8'), hashlib.sha256).hexdigest()
-        print(f"subject: {subject}")
-        print(f"content: {content}")
-        print(f"cli_hmac: {cli_hmac}")
-        print(f"srv_hmac: {srv_hmac}")
 
         if srv_hmac == cli_hmac:
             if form.is_valid():
@@ -33,7 +29,6 @@ def question_create(request):
                 question.author = request.user  # 추가한 속성 author 적용
                 question.create_date = datetime.now()
                 date = question.create_date.strftime('%Y-%m-%d %I:%M')
-                print(f"date : {date}")
                 sha256_hash = hashlib.sha256()
                 data = f"{question.subject}{question.content}{question.author}{date}"
                 sha256_hash.update(data.encode('utf-8'))
@@ -92,7 +87,6 @@ def question_delete(request, question_id):
 @login_required(login_url="common:login")
 def question_decision(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    print(f"create_date : {question.create_date}")
     if request.user.last_name <= question.author.last_name:
         if request.user.is_staff:
             pass
@@ -128,15 +122,8 @@ def question_ocra(request, question_id):
     m = question.question_hash
     S_check = bytes(f'{C}{p_h}{m}{t}',encoding='utf8')
     srv_ocra = str(OCRA(key, S_check))
-    print(f"date : {t}")
-    print(f"S_check : {S_check}")
-    print(f"cli_ocra : {cli_ocra}")
-    print(f"srv_ocra : {srv_ocra}")
-    print(f"status : {status}")
-
 
     if srv_ocra == cli_ocra:
-        print("성공!")
         if request.user.last_name <= question.author.last_name:
             if request.user.is_staff:
                 pass
@@ -152,10 +139,6 @@ def question_ocra(request, question_id):
     return redirect('pybo:index')
 
 def determine_qc(request):
-    qc = request.POST.get("qc")
-
-    print(f"qc is : {qc}")
-
     qs = random.randint(1, 100)
     response_data = {'qs' : qs}
     return JsonResponse(response_data)
@@ -167,9 +150,6 @@ def open_question_modal(request, question_id):
     return render(request, "pybo:detail", {'question_id' : question.id, 'challenge_value' : challenge_value})
 
 def open_question_modal(request):
-    print("open_question_modal run!")
-    print(f"request.method : {request.method}")
     if request.method == 'GET':
         challenge_value = random.randint(1, 9999)
-        print(f"challenge_value : {challenge_value}")
         return JsonResponse({'challenge_value': challenge_value})
